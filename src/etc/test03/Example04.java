@@ -15,10 +15,8 @@ public class Example04 {
         int newDragonEgg;
         int newDragon;
         for (int i=0; i<n; i++) {
-            newDragonEgg = 0;
-
             newDragon = dragonEgg[1];
-            newDragonEgg += newDragon;
+            newDragonEgg = newDragon;
             dragonEgg[1] = dragonEgg[0];
 
             answer += dragon[3];
