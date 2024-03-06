@@ -1,61 +1,68 @@
 package programers.level01;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * https://school.programmers.co.kr/learn/courses/30/lessons/131705
  */
 public class Level01_131705 {
 
+    public Map<Object, Object> map = new HashMap<>();
     public int solution(int[] number) {
-        int answer = 0;
-
-        List<Integer> numbers = new ArrayList<Integer>();
-        for(int i=0; i< number.length; i++) {
-            numbers.add(number[i]);
+        for(int i = 0; i<number.length; i++) {
+            int point[] = {-1,-1,-1};
+            point[0] = i;
+            this.wow(point,1, number);
         }
 
-        for(int i = 0; i<numbers.size(); i++) {
-            List<Integer> clonedList = numbers.stream().collect(Collectors.toList());
-            clonedList.remove(i);
-            answer+=this.wow(numbers.get(i),1, clonedList);
-        }
-
-
-
-        answer = answer;
-        answer = answer < 0 ? 0 : answer;
-
-        System.out.println(answer);
-        return answer;
+        return map.size();
     }
 
-    public int wow(int select, int depth, List<Integer> numbers) {
+    private int wow(int[] point, int depth, int[] number) {
 
         int sum = 0;
-        for(int i = 0; i<numbers.size(); i++) {
-            int tot = numbers.get(i) + select;
 
-            if(depth == 2 && tot == 0) {
-                sum += 1;
-            }
+        for(int i = 0; i<number.length; i++) {
+
+            if(check(point,i)) continue;
+            point[depth] = i;
 
             if(depth == 1) {
-                List<Integer> clonedList = numbers.stream().collect(Collectors.toList());
-                clonedList.remove(i);
-                sum += this.wow(tot, depth+1, clonedList);
-                return sum;
+                this.wow(point, depth+1, number);
             }
+
+            if(depth == 2) {
+
+                int select = number[point[0]] + number[point[1]];
+                int tot = number[i] + select;
+                if(tot == 0) {
+                    int pointCloned[] = Arrays.copyOf(point, point.length);
+                    Arrays.sort(pointCloned);
+                    String temp = "";
+                    for (int k = 0; k < pointCloned.length; k++) {
+                        temp += pointCloned[k] + ",";
+                    }
+                    map.put(temp, "Y");
+                }
+            }
+
         }
         return sum;
     }
 
+    private boolean check(int[] point, int value) {
+        for(int k=0; k<point.length; k++) {
+            if(point[k] == value) return true;
+        }
+        return false;
+    }
+
     public static void main(String args[]) {
-        int[] number = {-3, -2, -1, 0, 1, 2, 3};
+        int[] number = {-2, 3, 0, 2, -5};
         Level01_131705 level01_131705 = new Level01_131705();
-        level01_131705.solution(number);
+        System.out.println(level01_131705.solution(number));
     }
 
 }
